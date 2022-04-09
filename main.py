@@ -33,11 +33,16 @@ def OrientationCheck(currentPdfWidth, currentPdfHeight):
     
 needsResize = "true"
 
-#LTR
+# Userspace units are equal to inch * 72
+# _h is the height measurement
+# _w is the width measurement
+# Width should always be the longest length
+
+# LTR (US Letter 8.5x11)
 LTR_h = 612
 LTR_w = 792
 
-#TAB
+# TAB (Tabloid 11x17)
 TAB_h = 792
 TAB_w = 1224
 
@@ -64,6 +69,7 @@ for i in range(pages_no):
         elif pdf_file.upper().find("LTR") != -1:
             newWidth = LTR_w
             newHeight = LTR_h
+    # For portrait orientation we need to reverse the height and width
     elif orientation == "portrait":
         if pdf_file.upper().find("TAB") != -1:
             newWidth = TAB_h
