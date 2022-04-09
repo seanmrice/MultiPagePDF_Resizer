@@ -56,7 +56,7 @@ jobs:
       uses: github/codeql-action/autobuild@v2
     - name: Setup Python
       uses: actions/setup-python@v3.1.1
-      with:
+     # with:
       # Version range or exact version of a Python version to use, using SemVer's version range syntax.
         #python-version: # optional, default is 3.x
     # Used to specify a package manager for caching in the default directory. Supported values: pip, pipenv, poetry.
