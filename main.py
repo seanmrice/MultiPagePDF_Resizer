@@ -2,15 +2,16 @@ import PyPDF2
 from PyPDF2 import PdfFileMerger
 import glob
 import os
+import sys
 
 # The working directory where the PDF to process exists
-working_dir = "/Windows/Main/PDF Resizer/"
+working_dir: str = "/Windows/Main/PDF Resizer/"
 
 # The temporary directory (that exists) for intermediate files to use during the correction of each page
-temp_dir = "/Windows/Main/PDF Resizer/temp/"
+temp_dir: str = "/Windows/Main/PDF Resizer/temp/"
 
 # The PDF file to be processed
-pdf_file = "Input_PDF_File.pdf"
+pdf_file: str = "Input_PDF_File.pdf"
 
 # We have to open the file prior to entering the loop to avoid a bug with PyPDF2
 pdf_in_file = open(pdf_file, 'rb')
@@ -35,11 +36,13 @@ def OrientationCheck(currentPdfWidth, currentPdfHeight):
 
 
 needsResize = "true"
+newHeight = 0
+newWidth = 0
 
 # Userspace units are equal to inch * 72
 # _h is the height measurement
 # _w is the width measurement
-# Width should always be the longest length
+# Width should always be the longest dimension
 
 # LTR (US Letter 8.5x11)
 LTR_h = 612
@@ -49,8 +52,8 @@ LTR_w = 792
 TAB_h = 792
 TAB_w = 1224
 
-inputpdf = PyPDF2.PdfFileReader(pdf_in_file, strict=False)
-pages_no = inputpdf.numPages
+input_pdf = PyPDF2.PdfFileReader(pdf_in_file, strict=False)
+pages_no = input_pdf.numPages
 
 # Check if temp dir is actually there, if not, then create it under the working directory
 temp_dir_check = os.path.exists(temp_dir)
@@ -58,13 +61,14 @@ if not temp_dir_check:
     os.mkdir(working_dir + "temp/")
 
 for i in range(pages_no):
-    inputpdf = PyPDF2.PdfFileReader(pdf_in_file)
-    currentPage = inputpdf.getPage(i)
+    input_pdf = PyPDF2.PdfFileReader(pdf_in_file)
+    currentPage = input_pdf.getPage(i)
 
     pdfMediaBox = currentPage.mediaBox
     currentPdfWidth = pdfMediaBox[2]
     currentPdfHeight = pdfMediaBox[3]
     orientation = OrientationCheck(currentPdfWidth, currentPdfHeight)
+
     if orientation == "landscape":
         if pdf_file.upper().find("TAB") != -1:
             newWidth = TAB_w
@@ -80,6 +84,8 @@ for i in range(pages_no):
         elif pdf_file.upper().find("LTR") != -1:
             newWidth = LTR_h
             newHeight = LTR_w
+    else:
+        sys.exit("Unable to determine document orientation")
     needsResize = SizeCheck(currentPdfWidth, currentPdfHeight, newHeight, newWidth)
     if needsResize == "true":
         currentPage.scaleTo(newWidth, newHeight)
@@ -110,4 +116,4 @@ if needsResize == "true":
     for pdf in file_list:
         if os.path.exists(pdf):
             os.remove(pdf)
-print("Processing of file:", pdf_file, "complete.")
+sys.exit("Processing of file: " + pdf_file + " complete.")
