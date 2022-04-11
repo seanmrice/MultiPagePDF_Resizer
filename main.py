@@ -1,8 +1,9 @@
-import PyPDF2
-from PyPDF2 import PdfFileMerger
 import glob
 import os
 import sys
+
+import PyPDF2
+from PyPDF2 import PdfFileMerger
 
 # The working directory where the PDF to process exists
 working_dir: str = "/Windows/Main/PDF Resizer/"
