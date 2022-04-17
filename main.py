@@ -25,16 +25,17 @@ if __name__ == '__main__':
         if currentPdfWidth == newWidth and currentPdfHeight == newHeight:
             print("PDF does not need resizing")
             return "false"
-        else:
-            return "true"
+        return "true"
 
 
-    # OrientationCheck returns the orientation of the PDF page (portrait or landscape) as a string
+    # OrientationCheck returns the orientation of the PDF page (portrait, landscape, or square) as a string
     def OrientationCheck(currentPdfWidth, currentPdfHeight):
         if currentPdfWidth > currentPdfHeight:
             return "landscape"
-        else:
+        if currentPdfWidth < currentPdfHeight:
             return "portrait"
+        if currentPdfWidth == currentPdfHeight:
+            return "square"
 
 
     needsResize = "true"
